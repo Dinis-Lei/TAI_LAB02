@@ -35,19 +35,19 @@ struct Anchor {
 
 static void parse_command_line(int argc, char** argv);
 
-static void load_reference(string fname);
+static void load_reference(const string fname);
 
-static void load_reference_preprocessed(string fname);
+static void load_reference_preprocessed(const string fname);
 
-static void encode_target(string fname);
+static void encode_target(const string fname);
 
 static double estimate_probability(int hits, int misses, double alpha, int asize);
 
-static float calc_acc_information(string fname, string e_fname);
+static float calc_acc_information(const string fname,const string e_fname);
 
-static int get_alphabet(string filename, unordered_set<char> &alphabet);
+static int get_alphabet(const string filename, unordered_set<char> &alphabet);
 
-static map<string, vector<Anchor>> get_example_model(string filename);
+static map<string, vector<Anchor>> get_example_model(const string filename);
 
 // Copy Model Parameters
 bool ignore1 = false;
@@ -82,16 +82,17 @@ int main(int argc, char** argv) {
         if (is_preprocessed)
             load_reference_preprocessed(r);
         else{
-            global_acc_info.insert(std::make_pair(r,calc_acc_information(t_path,r_Dir+r+".txt")));
+            global_acc_info.insert(std::make_pair(r,calc_acc_information(t_path,r_Dir+r+".utf8")));
             //load_reference(r);
             
         }
     }
     map<string, float>::iterator it;
 
-    string predictLanguage = "";
-    float max = 1000000000.0;
-    for (it = global_acc_info.begin(); it != global_acc_info.end(); it++)
+    it = global_acc_info.begin();
+    string predictLanguage = it->first;
+    float max = it->second;
+    for (it; it != global_acc_info.end(); it++)
     {
         if (it->second < max){
             max = it->second;
@@ -104,39 +105,9 @@ int main(int argc, char** argv) {
     }
     cout << "I guess the sample was writen in " << predictLanguage << endl;
 
-
-    // DIR *dir = opendir(reference_fname);
-
-    // struct dirent *entry = readdir(dir);
-
-    // while (entry != NULL)
-    // {
-    //     if (entry->d_type == DT_DIR){
-
-    //         if (is_preprocessed)
-    //             load_reference_preprocessed(reference_fname+"/"+entry.d_name+"/preprocessed.txt");
-    //         else
-    //             load_reference(reference_fname+"/"+entry.d_name+"/example.txt");
-
-    //     }
-
-    //     entry = readdir(dir);
-    // }
-
-    // closedir(dir);
-
-
-
-    //encode_target(target_fname);
-
-
-
-
-
-
 }
 
-static float calc_acc_information(string fname, string e_fname) {
+static float calc_acc_information(const string fname, const string e_fname) {
 
     map<string, vector<Anchor>> dict = get_example_model(e_fname);
 
@@ -146,7 +117,7 @@ static float calc_acc_information(string fname, string e_fname) {
     int fsize = get_alphabet(fname, alphabet);           // Size of the file (number of symbols)
     int asize = 0;                                          // Size of the alphabet
     for (char c: alphabet){
-        cout << asize << " " << (c) << endl;
+        //cout << asize << " " << (c) << endl;
         global_info.insert(make_pair(c, 0));
         asize++;
     }
@@ -168,6 +139,7 @@ static float calc_acc_information(string fname, string e_fname) {
     // Use a while loop together with the getline() function to read the file line by line
     cout << endl;
     int not_copy = 0;
+    int n_symbols = 0;
 
     vector<Anchor> testing_anchors;
 
@@ -322,18 +294,10 @@ static float calc_acc_information(string fname, string e_fname) {
 }
 
 
-static map<string, vector<Anchor>> get_example_model(string filename){
+static map<string, vector<Anchor>> get_example_model(const string filename){
     unordered_set<char> alphabet;
-    map<char, float> global_info;                           // table of symbol - amount of information 
 
     int fsize = get_alphabet(filename, alphabet);           // Size of the file (number of symbols)
-    int asize = 0;                                          // Size of the alphabet
-    for (char c: alphabet){
-        cout << asize << " " << (c) << endl;
-        global_info.insert(make_pair(c, 0));
-        asize++;
-    }
-    cout << "Alphabet size: " << asize << endl;
     // Create a text string, which is used to output the text file
     char byte = 0;
 
@@ -344,18 +308,9 @@ static map<string, vector<Anchor>> get_example_model(string filename){
     // Create and open a text file
     ifstream input_file(filename);
     int i = 0;
-    int n_symbols = 0;
     map<string, vector<Anchor>> dict;
-    int offset = 1;
-    string testing_seq;
 
-    double sum_acc = 0;
-    int count_copies = 0;
-    int sum_len_copies = 0;
 
-    // Use a while loop together with the getline() function to read the file line by line
-    cout << endl;
-    int not_copy = 0;
 
     vector<Anchor> testing_anchors;
     double acc_information = 0;
@@ -370,26 +325,6 @@ static map<string, vector<Anchor>> get_example_model(string filename){
         full_seq += byte;
 
         if (sequence.length()==k){
-            // Check if there is no candidate sequence and it has appeared more than once
-            if (testing_seq.length() == 0 && full_seq.length() > k && dict.count(sequence) > 0) {
-                testing_seq = sequence;
-                int i = 0;
-                auto it = dict.find(testing_seq);
-                if (it != dict.end()) {
-                    // Iterate through the vector in reverse order
-                    std::vector<Anchor>& myVec = it->second;
-                    // Save the n-th most recent anchors
-                    for (auto rit = myVec.rbegin(); rit != myVec.rend(); ++rit) {
-                        // Update the value of each element in the struct
-                        if (i == n_anchors) {
-                            break;
-                        }
-                        rit->is_active = true;
-                        testing_anchors.push_back(*rit);
-                        i++;
-                    }
-                }
-            }
 
             // Save the new Anchor
             Anchor new_seq;
@@ -501,7 +436,7 @@ static void parse_command_line(int argc, char** argv) {
 }
 
 
-static int get_alphabet(string filename, unordered_set<char> &alphabet) {
+static int get_alphabet(const string filename, unordered_set<char> &alphabet) {
     char byte = 0;
 
     ifstream input_file(filename);
@@ -523,7 +458,7 @@ static double estimate_probability(int hits, int misses, double alpha, int asize
     return (hits + alpha)/(hits+misses+2*alpha);
 }
 
-static void load_reference_preprocessed(string fname){
+static void load_reference_preprocessed(const string fname){
     cout << "Sup" ;
 
 }
