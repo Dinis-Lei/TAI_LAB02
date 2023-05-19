@@ -245,8 +245,19 @@ static void encode_target(string target_fname, string ipb_fname, double& fsize, 
         }
         else {
             count_not_copies++;
-            csize += default_symb_size;
-            info_per_byte.push_back(default_symb_size);
+            double info;
+            if (context_table.count(context_window) > 0 && context_table[context_window].count(string(1,symbol)) > 0) {
+                double prob = (double)context_table[context_window][string(1,symbol)]/(double)context_table[context_window]["sum"];
+                //cout << symbol << " " << prob << " " <<  context_table[context_window][string(1,symbol)] << " " << context_table[context_window]["sum"] <<  endl;
+                info = -log2(prob);
+                context_hits++;
+            }
+            else {
+                info = default_symb_size;
+            }
+
+            csize += info;
+            info_per_byte.push_back(info);
         }
         
         if (info_per_byte.size() >= 100) {
