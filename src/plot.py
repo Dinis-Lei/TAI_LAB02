@@ -14,8 +14,8 @@ with open(fname, 'r') as f:
     data = data[1:]
     print(log2(card))
     base = [log2(card)]*len(data)
-    print(data)
-    print(sum(data))
+    # print(data)
+    # print(sum(data))
     print(data.mean())
 
     # Define the filter parameters
