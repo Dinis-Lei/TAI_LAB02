@@ -39,13 +39,17 @@ int main(int argc, char** argv) {
 
 
 
+    cout << "t_path " << t_path << endl;
+    cout << "r_Dir " << r_Dir << endl;
     for (auto &p : fs::recursive_directory_iterator(r_Dir))
     {
         string r =  p.path().stem().string();
-        std::cout << r << '\n';
-        string preProcessFileName = preprocessFileLocation+"ipb_"+r+"_" +t_path+".txt" ;
+        // std::cout << r << '\n';
+        string preProcessFileName = "ipb_" +t_path.substr( 9, t_path.size()-13)+"_" + r +".txt" ;
+        cout << "preProcessFileName " << preProcessFileName << endl;
         ifstream f(preProcessFileName);
         if (!f.good()){
+            // cout << "r " << r << endl;
             execlp("./bin/lang", "-s", r_Dir + r , t_path);
         }
             global_acc_info.insert(std::make_pair(r,calc_acc_information(preProcessFileName )));
@@ -57,7 +61,7 @@ int main(int argc, char** argv) {
     float max = it->second;
     for (it; it != global_acc_info.end(); it++)
     {
-        if (it->second < max){
+        if (it->second < max && it->second != 0 || it->second != 0 && max == 0){
             max = it->second;
             predictLanguage = it->first;
         }
@@ -75,15 +79,17 @@ static float calc_acc_information(const string preProcessFilename) {
     string line;
     double acc_information = 0;
     ifstream input_file(preProcessFilename);
-    int size = 0;
+    int asize = 0;
     if( getline(input_file,line)){
         try {
-            size = stoi(line);
+            asize = stoi(line);
         }
         catch (exception &err) {
             cout << "Invalid n argument" << std::endl;
             exit(EXIT_FAILURE);
         }
+        cout << "asize " << asize << endl;
+        double maxInfo = log2(asize);
         while (getline(input_file,line)) {
             double acc = 0; 
 
@@ -94,10 +100,15 @@ static float calc_acc_information(const string preProcessFilename) {
                 cout << "Invalid n argument" << std::endl;
                 exit(EXIT_FAILURE);
             }
-
+            // if (maxInfo < acc){
+            //     acc_information += -log2(1-acc);
+            // }
+            // else
+            //     acc_information += -log2(acc);
             acc_information += acc;
         }
     }
+    return acc_information;
 }
 static void parse_command_line(int argc, char** argv) {
     int c;                          // Opt process

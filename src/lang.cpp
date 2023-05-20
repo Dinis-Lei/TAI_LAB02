@@ -111,11 +111,14 @@ int main(int argc, char** argv) {
         count++;
     }
     cout << "Average length: " << all_sum/count << endl;
+    cout << "reference_fname: " << reference_fname << "|" << endl;
+    cout << "target_fname: " << target_fname << "|" << endl;
     string ipb_fname = "ipb_" + 
-                        reference_fname.substr(reference_fname.size() - 6, 2) 
+                        reference_fname.substr( 9, reference_fname.size()-13) 
                         + "_" + 
-                        target_fname.substr(target_fname.size() - 6, 2) + ".txt";
+                        target_fname.substr(18, target_fname.size() - 23) + ".txt";
     // clear the file
+    cout << "ipb_fname: " << ipb_fname << "|" << endl;
     ofstream ofs;
     ofs.open(ipb_fname, std::ofstream::out | std::ofstream::trunc);
     ofs << asize << endl;
