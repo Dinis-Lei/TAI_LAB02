@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <bits/stdc++.h>
 #include <chrono>
+#include <sys/stat.h>
 
 using namespace std;
 
@@ -113,10 +114,19 @@ int main(int argc, char** argv) {
     cout << "Average length: " << all_sum/count << endl;
     cout << "reference_fname: " << reference_fname << "|" << endl;
     cout << "target_fname: " << target_fname << "|" << endl;
-    string ipb_fname = "ipb_" + 
-                        reference_fname.substr( 9, reference_fname.size()-13) 
+
+    string t = target_fname.substr(9, target_fname.size() - 13);
+    string preprocessFileLocation = "examples/preprocess/"+ t;
+    if(mkdir(preprocessFileLocation.c_str() , S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1)
+        cerr << " Error : " << strerror(errno) << endl;
+        
+    else
+        cout << "File Created";
+
+    string ipb_fname = preprocessFileLocation + "/" + "ipb_" + 
+                        reference_fname.substr( 18, reference_fname.size()-23) 
                         + "_" + 
-                        target_fname.substr(18, target_fname.size() - 23) + ".txt";
+                        t + ".txt";
     // clear the file
     cout << "ipb_fname: " << ipb_fname << "|" << endl;
     ofstream ofs;

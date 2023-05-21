@@ -27,8 +27,8 @@ static void parse_command_line(int argc, char** argv);
 static float calc_acc_information(const string preProcessFilename);
 
 map <string, float> global_acc_info;
-string r_Dir = "./examples/language/";
-string preprocessFileLocation = "./examples/preprocess/";
+string r_Dir = "examples/language/";
+string preprocessFolder = "examples/preprocess/";
 
 bool save = false;
 string t_path;
@@ -44,15 +44,20 @@ int main(int argc, char** argv) {
     for (auto &p : fs::recursive_directory_iterator(r_Dir))
     {
         string r =  p.path().stem().string();
-        // std::cout << r << '\n';
-        string preProcessFileName = "ipb_" +t_path.substr( 9, t_path.size()-13)+"_" + r +".txt" ;
-        cout << "preProcessFileName " << preProcessFileName << endl;
+        std::cout << r << '\n';
+        string target_name = t_path.substr( 9, t_path.size()-13);
+        string preprocessFileLocation = preprocessFolder + target_name+"/";
+        string preProcessFileName = preprocessFileLocation+"ipb_" + r + "_" + target_name +".txt" ;
+        cout << "preProcessFileName " << preProcessFileName ;
         ifstream f(preProcessFileName);
         if (!f.good()){
-            // cout << "r " << r << endl;
-            execlp("./bin/lang", "-s", r_Dir + r , t_path);
+            cout << " is not processed" ;
+            string script = "./bin/lang -s " + r_Dir + r + ".utf8 "+ t_path;
+            const char* c = script.c_str();
+            system( c );
         }
-            global_acc_info.insert(std::make_pair(r,calc_acc_information(preProcessFileName )));
+        cout << endl;
+        global_acc_info.insert(std::make_pair(r,calc_acc_information(preProcessFileName )));
     }
     map<string, float>::iterator it;
 
@@ -108,6 +113,7 @@ static float calc_acc_information(const string preProcessFilename) {
             acc_information += acc;
         }
     }
+    cout << acc_information << endl;
     return acc_information;
 }
 static void parse_command_line(int argc, char** argv) {
