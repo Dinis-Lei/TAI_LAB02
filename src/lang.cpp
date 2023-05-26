@@ -39,7 +39,7 @@ static void load_reference(string fname);
  * @brief Loads the reference training text already processed
  * @param fname 
  */
-static void load_reference_preprocessed(string fname);
+static void load_reference_preprocessed(string reference_fname, string copy_model_fname, string context_model_fname);
 
 /**
  * @brief Encodes the target text
@@ -58,6 +58,8 @@ static void write_array_to_file(vector<double> &array, string fname);
 
 static void generate_context_model(string fname, long unsigned int k);
 
+static void save_model(string fname);
+
 
 // Copy Model Parameters
 bool ignore1 = false;
@@ -72,6 +74,9 @@ long unsigned int k = 4;
 
 string reference_fname;
 string target_fname;
+string ipb_fname;
+string copy_model_fname;
+string context_model_fname;
 vector<char> reference_string;
 
 map<string, vector<int>> positions;
@@ -93,9 +98,12 @@ int main(int argc, char** argv) {
     parse_command_line(argc, argv);
     auto tic = chrono::high_resolution_clock::now();
     if (is_preprocessed)
-        load_reference_preprocessed(reference_fname);
+        load_reference_preprocessed(reference_fname, copy_model_fname, context_model_fname);
     else
         load_reference(reference_fname);
+
+    if (save)
+        save_model(context_model_fname);
 
     generate_context_model(reference_fname, context_window_size);
 
@@ -111,10 +119,12 @@ int main(int argc, char** argv) {
         count++;
     }
     cout << "Average length: " << all_sum/count << endl;
-    string ipb_fname = "ipb_" + 
-                        reference_fname.substr(reference_fname.size() - 6, 2) 
-                        + "_" + 
-                        target_fname.substr(target_fname.size() - 6, 2) + ".txt";
+    
+    if (ipb_fname.empty())
+        ipb_fname = "ipb/ipb_" + 
+                            reference_fname.substr(0, reference_fname.size() - 6) 
+                            + "_" + 
+                            target_fname.substr(0, target_fname.size() - 4) + ".txt";
     // clear the file
     ofstream ofs;
     ofs.open(ipb_fname, std::ofstream::out | std::ofstream::trunc);
@@ -174,8 +184,91 @@ static void load_reference(string fname) {
 
 }
 
-static void load_reference_preprocessed(string fname) {
+static void load_reference_preprocessed(string fname, string copy_model_fname, string context_model_fname) {
+    ifstream infile(fname);
+    if (!infile.is_open()) {
+        cerr << "Failed to open input file: " << fname << endl;
+        exit(EXIT_FAILURE);
+    }
+    // read file into reference_string
+    char c;
+    while (infile.get(c)) {
+        reference_string.push_back(c);
+    }
+    infile.close();
 
+    // load copy model
+    ifstream infile2(copy_model_fname);
+    if (!infile2.is_open()) {
+        cerr << "Failed to open input file: " << copy_model_fname << endl;
+        exit(EXIT_FAILURE);
+    }
+    string line;
+    getline(infile2, line);
+    k = stoi(line);
+    getline(infile2, line);
+    asize = stoi(line);
+    default_symb_size = ceil(log2(asize));
+    while (getline(infile2, line)) {
+        stringstream ss(line);
+        string sequence;
+        ss >> sequence;
+        int index;
+        while (ss >> index) {
+            positions[sequence].push_back(index);
+        }
+    }
+    infile2.close();
+
+    // load context model
+    ifstream infile3(context_model_fname);
+    if (!infile3.is_open()) {
+        cerr << "Failed to open input file: " << context_model_fname << endl;
+        exit(EXIT_FAILURE);
+    }
+    getline(infile3, line);
+    context_window_size = stoi(line);
+    while (getline(infile3, line)) {
+        stringstream ss(line);
+        string sequence;
+        ss >> sequence;
+        char c;
+        int sum = 0;
+        while (ss >> c) {
+            int freq;
+            sum += freq;
+            ss >> freq;
+            context_table[sequence][string(1,c)] = freq;
+        }
+        context_table[sequence]["sum"] = sum;
+    }
+    infile3.close();
+}
+
+static void save_model(string fname) {
+    ofstream ofs;
+    ofs.open("models/copy/" + fname, std::ofstream::out | std::ofstream::trunc);
+    ofs << k << endl;
+    ofs << asize << endl;
+    for (auto pair : positions) {
+        ofs << pair.first << " ";
+        for (int i : pair.second) {
+            ofs << i << " ";
+        }
+        ofs << endl;
+    }
+    ofs.close();
+
+    ofs.open("models/context/" + fname, std::ofstream::out | std::ofstream::trunc);
+    ofs << context_window_size << endl;
+    for (auto pair : context_table) {
+        ofs << pair.first << " ";
+        for (auto pair2 : pair.second) {
+            ofs << "(" << pair2.first << " " << pair2.second << ") ";
+        }
+        ofs << endl;
+    }
+    ofs.close();
 }
 
 static void generate_context_model(string fname, long unsigned int k) {
@@ -481,11 +574,19 @@ static void write_array_to_file(vector<double>& array, string fname) {
 
 static void parse_command_line(int argc, char** argv) {
     int c;                          // Opt process
-    while ((c = getopt(argc, argv, "k:st:a:m:M:n:ip")) != -1) {
+    while ((c = getopt(argc, argv, "k:s:t:a:m:M:n:ir:p:")) != -1) {
         switch (c)
         {
+            case 'r':
+                ipb_fname = optarg;
+                ipb_fname = "ipb/" + ipb_fname;
+                break;
             case 'p':
                 is_preprocessed = true;
+                context_model_fname = optarg;
+                copy_model_fname = optarg;
+                context_model_fname = "models/context/" + context_model_fname;
+                copy_model_fname = "models/copy/" + copy_model_fname;
                 break;
             case 'i':
                 ignore1 = true;
@@ -537,6 +638,10 @@ static void parse_command_line(int argc, char** argv) {
                 break;
             case 's':
                 save = true;
+                context_model_fname = optarg;
+                copy_model_fname = optarg;
+                context_model_fname = "models/context/" + context_model_fname;
+                copy_model_fname = "models/copy/" + copy_model_fname;
                 break;
             case 'k':
                 try {
