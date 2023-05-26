@@ -84,6 +84,9 @@ int default_symb_size;
 unordered_set<char> alphabet;
 int asize;
 
+// Structure which would store the metadata
+struct stat sb;
+
 string context_window;
 long unsigned int context_window_size = 2;
 
@@ -117,11 +120,16 @@ int main(int argc, char** argv) {
 
     string t = target_fname.substr(9, target_fname.size() - 13);
     string preprocessFileLocation = "examples/preprocess/"+ t;
-    if(mkdir(preprocessFileLocation.c_str() , S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1)
-        cerr << " Error : " << strerror(errno) << endl;
-        
+    cout << "preprocessFileLocation : " << preprocessFileLocation << endl;
+    if (stat(preprocessFileLocation.c_str(), &sb) != 0){
+        if(mkdir(preprocessFileLocation.c_str() , S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1)
+            cerr << " Error : " << strerror(errno) << endl;
+        else
+            cout << "Directory Created" << endl;
+    }
     else
-        cout << "File Created";
+        cout << "Directory already exists" << endl;
+
 
     string ipb_fname = preprocessFileLocation + "/" + "ipb_" + 
                         reference_fname.substr( 18, reference_fname.size()-23) 

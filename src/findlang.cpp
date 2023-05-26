@@ -1,3 +1,8 @@
+// TODO: Add more parameters to the command line
+// TODO: Use combination of faccuracy and quantity of information
+
+
+
 #include <iostream>
 #include <dirent.h>
 #include <stdio.h>
@@ -20,6 +25,9 @@ namespace fs = std::filesystem;
  * @param argc Number of arguments passed
  * @param argv Arguments passed
  */
+
+
+//      log2($alfabeto)/2
 
 
 static void parse_command_line(int argc, char** argv);
@@ -51,8 +59,8 @@ int main(int argc, char** argv) {
         cout << "preProcessFileName " << preProcessFileName ;
         ifstream f(preProcessFileName);
         if (!f.good()){
-            cout << " is not processed" ;
-            string script = "./bin/lang -s " + r_Dir + r + ".utf8 "+ t_path;
+            cout << " is not preprocessed" ;
+            string script = "./bin/lang -n 16 -s " + r_Dir + r + ".utf8 "+ t_path;
             const char* c = script.c_str();
             system( c );
         }
@@ -61,21 +69,31 @@ int main(int argc, char** argv) {
     }
     map<string, float>::iterator it;
 
+    float threshold = 0.6;
     it = global_acc_info.begin();
-    string predictLanguage = it->first;
-    float max = it->second;
+    map <string, float> provableLanguages;
+
     for (it; it != global_acc_info.end(); it++)
     {
-        if (it->second < max && it->second != 0 || it->second != 0 && max == 0){
-            max = it->second;
-            predictLanguage = it->first;
+        if (it->second > threshold){
+            provableLanguages.insert(std::make_pair(it->first,it->second));
         }
         std::cout << it->first    // string (key)
                 << ':'
                 << it->second   // string's value 
                 << std::endl;
     }
-    cout << "I guess the sample was writen in " << predictLanguage << endl;
+
+    cout << "The most provable languages are : " << endl;
+
+    it = provableLanguages.begin();
+    for (it; it != provableLanguages.end(); it++)
+    {
+        std::cout << "      " << it->first    // string (key)
+                << " with a probability of "
+                << it->second   // string's value 
+                << std::endl;
+    }
 
 }
 
@@ -85,6 +103,8 @@ static float calc_acc_information(const string preProcessFilename) {
     double acc_information = 0;
     ifstream input_file(preProcessFilename);
     int asize = 0;
+    float total = 0.0;
+    float hits = 0.0;
     if( getline(input_file,line)){
         try {
             asize = stoi(line);
@@ -94,10 +114,11 @@ static float calc_acc_information(const string preProcessFilename) {
             exit(EXIT_FAILURE);
         }
         cout << "asize " << asize << endl;
-        double maxInfo = log2(asize);
+        double maxInfo = log2(asize)/2;
+
         while (getline(input_file,line)) {
             double acc = 0; 
-
+            total++;
             try {
                 acc = stod(line);
             }
@@ -105,16 +126,15 @@ static float calc_acc_information(const string preProcessFilename) {
                 cout << "Invalid n argument" << std::endl;
                 exit(EXIT_FAILURE);
             }
-            // if (maxInfo < acc){
-            //     acc_information += -log2(1-acc);
-            // }
-            // else
-            //     acc_information += -log2(acc);
+            if (maxInfo > acc){
+                hits++;
+            }
             acc_information += acc;
         }
     }
-    cout << acc_information << endl;
-    return acc_information;
+    cout << "acc_information total: " << acc_information << endl;
+    cout << "Accuracy: " << hits/total << endl;
+    return hits/total; //acc_information;
 }
 static void parse_command_line(int argc, char** argv) {
     int c;                          // Opt process
