@@ -53,17 +53,32 @@ int main(int argc, char** argv) {
     {
         string r =  p.path().stem().string();
         std::cout << r << '\n';
-        string target_name = t_path.substr( 9, t_path.size()-13);
+        string target_name = t_path.substr( t_path.size()-7, 7);
+        cout << "Target name " << target_name << endl;
         string preprocessFileLocation = preprocessFolder + target_name+"/";
+        // check if folder preprocessFileLocation exists
+        if (!fs::exists(preprocessFileLocation)){
+            fs::create_directory(preprocessFileLocation);
+        }
+        else {
+            // delete files in directory
+            for (auto &p : fs::directory_iterator(preprocessFileLocation))
+            {
+                fs::remove(p);
+            }
+        }
+
         string preProcessFileName = preprocessFileLocation+"ipb_" + r + "_" + target_name +".txt" ;
         cout << "preProcessFileName " << preProcessFileName ;
         ifstream f(preProcessFileName);
         if (!f.good()){
-            cout << " is not preprocessed" ;
-            string script = "./bin/lang -n 16 -s " + r_Dir + r + ".utf8 "+ t_path;
+            cout << " is not preprocessed"  << endl;
+            string script = "./bin/lang -n 16 -r " + preProcessFileName + " " + r_Dir + r + ".utf8 "+ t_path;
+            cout << "Script: " << script << endl;
             const char* c = script.c_str();
             system( c );
         }
+        f.close();
         cout << endl;
         global_acc_info.insert(std::make_pair(r,calc_acc_information(preProcessFileName )));
     }
@@ -79,7 +94,7 @@ int main(int argc, char** argv) {
             provableLanguages.insert(std::make_pair(it->first,it->second));
         }
         std::cout << it->first    // string (key)
-                << ':'
+                << ": "
                 << it->second   // string's value 
                 << std::endl;
     }
@@ -102,6 +117,12 @@ static float calc_acc_information(const string preProcessFilename) {
     string line;
     double acc_information = 0;
     ifstream input_file(preProcessFilename);
+
+    if(!input_file.is_open()) {
+        cerr << "Failed to open input file: " << preProcessFilename << endl;
+        exit(EXIT_FAILURE);
+    }
+
     int asize = 0;
     float total = 0.0;
     float hits = 0.0;
@@ -131,6 +152,9 @@ static float calc_acc_information(const string preProcessFilename) {
             }
             acc_information += acc;
         }
+    }
+    else{
+        cout << "Empty file" << endl;
     }
     cout << "acc_information total: " << acc_information << endl;
     cout << "Accuracy: " << hits/total << endl;
