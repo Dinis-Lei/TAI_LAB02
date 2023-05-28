@@ -114,21 +114,21 @@ int main(int argc, char** argv) {
         all_sum = sum/pair.second.size();
         count++;
     }
-    cout << "Average length: " << all_sum/count << endl;
-    cout << "reference_fname: " << reference_fname << "|" << endl;
-    cout << "target_fname: " << target_fname << "|" << endl;
+    // cout << "Average length: " << all_sum/count << endl;
+    // cout << "reference_fname: " << reference_fname << "|" << endl;
+    // cout << "target_fname: " << target_fname << "|" << endl;
 
     string t = target_fname.substr(9, target_fname.size() - 13);
     string preprocessFileLocation = "examples/preprocess/"+ t;
-    cout << "preprocessFileLocation : " << preprocessFileLocation << endl;
+    // cout << "preprocessFileLocation : " << preprocessFileLocation << endl;
     if (stat(preprocessFileLocation.c_str(), &sb) != 0){
         if(mkdir(preprocessFileLocation.c_str() , S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1)
             cerr << " Error : " << strerror(errno) << endl;
-        else
-            cout << "Directory Created" << endl;
+        // else
+        //     cout << "Directory Created" << endl;
     }
-    else
-        cout << "Directory already exists" << endl;
+    // else
+    //     cout << "Directory already exists" << endl;
 
 
     string ipb_fname = preprocessFileLocation + "/" + "ipb_" + 
@@ -136,7 +136,7 @@ int main(int argc, char** argv) {
                         + "_" + 
                         t + ".txt";
     // clear the file
-    cout << "ipb_fname: " << ipb_fname << "|" << endl;
+    cout << "ipb_fname: " << ipb_fname  << endl;
     ofstream ofs;
     ofs.open(ipb_fname, std::ofstream::out | std::ofstream::trunc);
     ofs << asize << endl;
@@ -145,23 +145,23 @@ int main(int argc, char** argv) {
     double fsize = 0;
     double csize = 0;
     encode_target(target_fname, ipb_fname, fsize, csize);
-    cout << "INIT" << endl;
+    // cout << "INIT" << endl;
     auto toc = chrono::high_resolution_clock::now();
 
     auto duration = chrono::duration_cast<chrono::seconds>(toc - tic);
 
-    cout << "Alphabet size: " << asize << endl;
-    cout << "Default symbol size: " << default_symb_size << endl;
-    cout << "File size: " << fsize*default_symb_size << " bits" << endl;
-    cout << "Compressed size: " << csize << " bits" << endl;
-    cout << "File Size: " << fsize << " symbols" << endl;
-    cout << "Nº symbols not copied: " << count_not_copies << endl;
-    cout << "Nº symbols copied: " << count_copies << endl;
-    cout << "Average len of anchors: " << (double)count_copies/(double)tot_anchors << endl;
-    cout << "Total hits: " << global_hits << endl;
-    cout << "Total misses: " << global_misses << endl;
-    cout << "Nº of context hits: " << context_hits << endl;
-    cout << "Elapsed time: " << duration.count() << " seconds" << endl;
+    // cout << "Alphabet size: " << asize << endl;
+    // cout << "Default symbol size: " << default_symb_size << endl;
+    // cout << "File size: " << fsize*default_symb_size << " bits" << endl;
+    // cout << "Compressed size: " << csize << " bits" << endl;
+    // cout << "File Size: " << fsize << " symbols" << endl;
+    // cout << "Nº symbols not copied: " << count_not_copies << endl;
+    // cout << "Nº symbols copied: " << count_copies << endl;
+    // cout << "Average len of anchors: " << (double)count_copies/(double)tot_anchors << endl;
+    // cout << "Total hits: " << global_hits << endl;
+    // cout << "Total misses: " << global_misses << endl;
+    // cout << "Nº of context hits: " << context_hits << endl;
+    // cout << "Elapsed time: " << duration.count() << " seconds" << endl;
 }
 
 static void load_reference(string fname) {
@@ -381,7 +381,7 @@ static bool update_anchors(char symbol, int offset, bool& ignored_last, vector<A
         anchor.sum_info += info;
         if (info < 0) {
             cerr << "NEGATIVE INFO GAIN??" << endl;
-            cout << "!!!! INFO: " << info << " " << anchor.hits << " " << anchor.misses << endl;
+            // cout << "!!!! INFO: " << info << " " << anchor.hits << " " << anchor.misses << endl;
             exit(EXIT_FAILURE);
         }
         anchor.sum_info_per_symbol[predicted_symb] += info;
@@ -577,17 +577,17 @@ static void parse_command_line(int argc, char** argv) {
                 exit(EXIT_FAILURE);
         }
     }
-    cout << "Nº of Anchors = " << n_anchors << endl;
-    cout << "Max Size = " << max_size << endl;
-    cout << "Min Size = " << min_size << endl;
-    cout << "Alpha = " << alpha << endl;
-    cout << "Threshold = " << threshold << endl;
-    cout << "Save = " << save << endl;
-    cout << "Ignore Last = " << ignore1 << endl;
-    cout << "K = " << k << endl;
+    // cout << "Nº of Anchors = " << n_anchors << endl;
+    // cout << "Max Size = " << max_size << endl;
+    // cout << "Min Size = " << min_size << endl;
+    // cout << "Alpha = " << alpha << endl;
+    // cout << "Threshold = " << threshold << endl;
+    // cout << "Save = " << save << endl;
+    // cout << "Ignore Last = " << ignore1 << endl;
+    // cout << "K = " << k << endl;
 
     if (argc - optind < 2) {
-        cout << "Insert reference and target files" << endl;
+        // cout << "Insert reference and target files" << endl;
         exit(EXIT_FAILURE);
     }
 
