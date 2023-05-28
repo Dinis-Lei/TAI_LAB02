@@ -95,7 +95,6 @@ int context_hits = 0;
 int main(int argc, char** argv) {
 
     parse_command_line(argc, argv);
-    auto tic = chrono::high_resolution_clock::now();
     if (is_preprocessed)
         load_reference_preprocessed(reference_fname, model_fname);
     else{
@@ -133,6 +132,7 @@ int main(int argc, char** argv) {
     ofs << asize << endl;
     ofs.close();
 
+    auto tic = chrono::high_resolution_clock::now();
     double fsize = 0;
     double csize = 0;
     encode_target(target_fname, ipb_fname, fsize, csize);
@@ -197,6 +197,8 @@ static void load_reference_preprocessed(string fname, string model_fname) {
     // read file into reference_string
     char c;
     while (infile.get(c)) {
+        if (c == '\n')
+            c = ' ';
         c = tolower(c);
         reference_string.push_back(c);
     }
@@ -215,14 +217,26 @@ static void load_reference_preprocessed(string fname, string model_fname) {
     asize = stoi(line);
     default_symb_size = ceil(log2(asize));
     while (getline(infile2, line)) {
-        stringstream ss(line);
         string sequence;
-        ss >> sequence;
         // read the first k characters
         sequence = line.substr(0, k);
+        stringstream ss(line.substr(k + 1, line.size() - k - 1));
+
+        if (sequence == "m. h") {
+            cout << "hit" << endl;
+            cout << line << endl;
+            cout << ss.str() << endl;
+        }
+            
         int index;
         while (ss >> index) {
+            if (sequence == "m. h") {
+                cout << index << " ";
+            }
             positions[sequence].push_back(index);
+        }
+        if (sequence == "m. h") {
+            cout << endl;
         }
     }
     infile2.close();
@@ -236,36 +250,31 @@ static void load_reference_preprocessed(string fname, string model_fname) {
     getline(infile3, line);
     context_window_size = stoi(line);
 
-    getline(infile3, line);
-    int count = 0;
-    // loop through the chars of the line
-    while (count < line.size()) {
-        c = line[count];
-        count += 2;
-        alphabet.insert(c);
-    }
-
     while (getline(infile3, line)) {
-        //cout << line << endl;
-        stringstream ss(line.substr(context_window_size+1, line.size() - context_window_size-1));
-        string sequence;
-        sequence = line.substr(0, context_window_size);
-        int sum = 0;
-        int i = 0;
-        int freq;
-        //cout << ss.str() << endl;
-        //cout << sequence << " ";
-        for (char ch : alphabet) {
-            ss >> freq;
-            sum += freq;
-            //cout << ch << freq << " ";
-            context_table[sequence][string(1,ch)] = freq;
+        if (line.empty()) {
+            continue;  // Skip blank lines
         }
-        //cout << endl;
-        //cout << "sequence: " << sequence << " sum: " << sum << endl;
-        context_table[sequence]["sum"] = sum;
+
+        string outerKey = line;
+        map<string, int> innerMap;
+        while (getline(infile3, line) && !line.empty()) {
+            istringstream iss(line);
+            string innerKeyStr;
+            int value;
+
+            if (iss >> innerKeyStr >> value) {
+                // Handle special characters
+                if (innerKeyStr == "[SPACE]") {
+                    innerKeyStr = " ";
+                }
+                innerMap[innerKeyStr] = value;
+            }
+        }
+        context_table[outerKey] = innerMap;
+        
     }
     infile3.close();
+
 }
 
 static void save_model(string fname) {
@@ -293,22 +302,20 @@ static void save_model(string fname) {
         exit(EXIT_FAILURE);
     }
     ofs << context_window_size << endl;
-    for (auto pair : context_table) {
-        for (auto pair2 : pair.second) {
-            if (pair2.first == "sum")
-                continue;
-            ofs << pair2.first << " ";
-        }
-        break;
-    }
-    ofs << endl;
+    for (const auto& outerPair : context_table) {
+        ofs << outerPair.first << endl;
 
-    for (auto pair : context_table) {
-        ofs << pair.first << ": ";
-        for (auto pair2 : pair.second) {
-            ofs << pair2.second << " ";
+        for (const auto& innerPair : outerPair.second) {
+            // Handle special characters
+            if (innerPair.first == " ") {
+                ofs << "[SPACE]";
+            } else {
+                ofs << innerPair.first;
+            }
+            ofs << " " << innerPair.second << endl;
         }
-        ofs << endl;
+
+        ofs << endl;  // Add a blank line to separate outer pairs
     }
     ofs.close();
 }
@@ -360,6 +367,11 @@ static void encode_target(string target_fname, string ipb_fname, double& fsize, 
         cerr << "Failed to open input file: " << target_fname << endl;
         exit(EXIT_FAILURE);
     }
+    // cout << "Encoding target..." << endl;
+
+    // cout << context_table.size() << endl;
+    // cout << positions.size() << endl;
+    // cout << n_anchors << endl;
 
     string window = "";
     string testing_seq = "";
@@ -444,7 +456,7 @@ static void encode_target(string target_fname, string ipb_fname, double& fsize, 
             window.erase(0, 1);
         }
     }
-
+    //ofs.close();
     if (testing_seq.length() > 0) {
         int active_count = 0;
         for (Anchor& anchor: anchors) {
