@@ -10,18 +10,18 @@ ipb_fname: examples/preprocess/cantonese_sample/ipb_arab_cantonese_sample.txt
 ipb_fname: examples/preprocess/cantonese_sample/ipb_spanish_cantonese_sample.txt
 ipb_fname: examples/preprocess/cantonese_sample/ipb_cantonese_cantonese_sample.txt
 arab:0.00075959
-cantonese:0.714014
+cantonese:0.699962
 english:0
 greek:0
-japanese:0.471325
-korean:0.330042
+japanese:0.465249
+korean:0.323965
 latin:0
 portugues:0
 russian:0.00113938
 scottish:0.000379795
 spanish:0
 The most provable languages are : 
-      cantonese with a probability of 0.714014
+      cantonese with a probability of 0.699962
 ipb_fname: examples/preprocess/cantonese_sample/ipb_japanese_cantonese_sample.txt
 ipb_fname: examples/preprocess/cantonese_sample/ipb_portugues_cantonese_sample.txt
 ipb_fname: examples/preprocess/cantonese_sample/ipb_greek_cantonese_sample.txt
@@ -34,7 +34,7 @@ ipb_fname: examples/preprocess/cantonese_sample/ipb_arab_cantonese_sample.txt
 ipb_fname: examples/preprocess/cantonese_sample/ipb_spanish_cantonese_sample.txt
 ipb_fname: examples/preprocess/cantonese_sample/ipb_cantonese_cantonese_sample.txt
 arab:0.000379795
-cantonese:0.691607
+cantonese:0.687809
 english:0
 greek:0
 japanese:0.433346
@@ -45,7 +45,7 @@ russian:0
 scottish:0.00379795
 spanish:0
 The most provable languages are : 
-      cantonese with a probability of 0.691607
+      cantonese with a probability of 0.687809
 ipb_fname: examples/preprocess/cantonese_sample/ipb_japanese_cantonese_sample.txt
 ipb_fname: examples/preprocess/cantonese_sample/ipb_portugues_cantonese_sample.txt
 ipb_fname: examples/preprocess/cantonese_sample/ipb_greek_cantonese_sample.txt
@@ -118,85 +118,11 @@ scottish:0
 spanish:0
 The most provable languages are : 
       cantonese with a probability of 0.675275
-ipb_fname: examples/preprocess/cantonese_sample/ipb_japanese_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_portugues_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_greek_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_russian_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_scottish_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_korean_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_latin_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_english_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_arab_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_spanish_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_cantonese_cantonese_sample.txt
-arab:0.000379795
-cantonese:0.674896
-english:0
-greek:0
-japanese:0.431067
-korean:0.288264
-latin:0
-portugues:0
-russian:0
-scottish:0
-spanish:0
-The most provable languages are : 
-      cantonese with a probability of 0.674896
-ipb_fname: examples/preprocess/cantonese_sample/ipb_japanese_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_portugues_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_greek_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_russian_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_scottish_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_korean_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_latin_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_english_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_arab_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_spanish_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_cantonese_cantonese_sample.txt
-arab:0.000379795
-cantonese:0.674896
-english:0
-greek:0
-japanese:0.431067
-korean:0.288264
-latin:0
-portugues:0
-russian:0
-scottish:0
-spanish:0
-The most provable languages are : 
-      cantonese with a probability of 0.674896
-ipb_fname: examples/preprocess/cantonese_sample/ipb_japanese_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_portugues_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_greek_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_russian_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_scottish_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_korean_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_latin_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_english_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_arab_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_spanish_cantonese_sample.txt
-ipb_fname: examples/preprocess/cantonese_sample/ipb_cantonese_cantonese_sample.txt
-arab:0.000379795
-cantonese:0.675275
-english:0
-greek:0
-japanese:0.431067
-korean:0.288264
-latin:0
-portugues:0
-russian:0
-scottish:0
-spanish:0
-The most provable languages are : 
-      cantonese with a probability of 0.675275
 
 
-172,354
-196,179
-228,777
-249,303
-265,710
-286,498
-287,365
-293,701
+
+196,210
+207,793
+242,081
+260,657
+310,354

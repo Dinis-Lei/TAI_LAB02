@@ -16,18 +16,20 @@ with open(fname, 'r') as f:
     base = [log2(card)]*len(data)
     # print(data)
     # print(sum(data))
-    print(data.mean())
 
     # Define the filter parameters
-    fs = 100  # Sampling frequency (Hz)
+    fs = 100     # Sampling frequency (Hz)
     cutoff = 10  # Cutoff frequency (Hz)
-    order = 2  # Filter order
+    order = 2    # Filter order
 
     # Calculate the filter coefficients using a Butterworth filter
     b, a = butter(order, cutoff / (fs / 2), btype='low')
 
     # Apply the filter using the filtfilt function
     y1 = filtfilt(b, a, data)
+
+    print(np.sum(data <= log2(card)/2))
+    print(np.sum(y1 <= log2(card)/2))
 
     step = 1000
     for i in range(0, len(y1)-1, step):
@@ -37,5 +39,8 @@ with open(fname, 'r') as f:
         plt.plot(y1[i:i+step])
         #plt.plot(base, color='red')
         plt.plot([log2(card)/2]*len(y1[i:i+step]), color='green')
+
+        plt.figure(i+1, figsize=(10, 5))
+        plt.plot(data[i:i+step])
 
         plt.show()
