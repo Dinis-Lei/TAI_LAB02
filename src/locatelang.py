@@ -5,7 +5,7 @@ from math import log2
 import matplotlib.pyplot as plt
 from scipy.signal import butter, filtfilt
 
-saved = True
+saved = False
 if not saved:
     sequence_result={}
     matrix=[]
@@ -16,7 +16,7 @@ if not saved:
     # Execute the compiled program
     for file_name in os.listdir("examples/language"):
         if "ipb_" + file_name + "_mixedsample.txt"  not in os.listdir("examples/preprocess"):
-            execution_command = ["./bin/lang", "-a", "0.1",  "-t", "0.8", "-n", "30", "-r", "ipb_" + file_name.split(".")[0] + "_mixedsample.txt", "examples/language/" + file_name, "examples/mixedsample2.txt"]
+            execution_command = ["./bin/lang", "-a", "0.1",  "-t", "0.8", "-n", "30", "-r", "ipb_" + file_name.split(".")[0] + "_mixedsample.txt", "examples/language/" + file_name, "examples/mixedsample.txt"]
             subprocess.run(execution_command, check=True)
             languages.append(file_name.split(".")[0])
             with open( "ipb_" + file_name.split(".")[0] + "_mixedsample.txt", 'r') as f:
@@ -93,7 +93,7 @@ print(np.sum(values1 != "None"))
 print("Accuracy: ", np.sum(values1 != "None")/values1.shape[0])
 
 
-with open(  "examples/mixedsample2.txt", 'r') as f:
+with open(  "examples/mixedsample.txt", 'r') as f:
     # iterate over every character in the file
     file_content = f.read()
     i = 0
