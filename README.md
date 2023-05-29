@@ -13,7 +13,7 @@ Below are the parameters to run the program.
 All parameters are optional except the path to the file.
 
 ```bash
-./bin/cpm -k 4 -n 2 -M 5 -m 0 -a 1 -t 0.5 -s -i <path to file>  
+./bin/cpm -k 4 -n 2 -M 5 -m 0 -a 1 -t 0.5 -i -s <model name> -p <model name> -r <path to ipb file> <path to reference> <path to target>  
 ```
 - parameter k: Size of the windows and anchors; default value is 4
 - parameter n: Number of anchors; default value is -1, which means all anchors will be used
@@ -21,9 +21,12 @@ All parameters are optional except the path to the file.
 - parameter m: Minimum number of symbols for the anchor to evaluate; default value is 0
 - parameter a: alpha; smoothing parameter; default value is 1
 - parameter t: cutoff threshold; default value is 0.5
-- parameter s: save; save results to file
 - parameter i: ignored last; if last guess was ignored
-- parameter <path to file>: path to the file for the program to process  
+- parameter s: save; save the model
+- parameter p: load the model
+- parameter r: path for saving the ipb (info per byte) file
+- parameter <path to reference file>: path to the reference file for the program to process 
+- parameter <path to target file>: path to the target file for the program to process 
 
 ### Example
 
@@ -36,7 +39,7 @@ All parameters are optional except the path to the file.
 ### How to compile
 
 ```bash
-g++ -O3 -o bin/findlang src/findlang.cpp
+g++ -O3 -std=c++17 -o bin/findlang src/findlang.cpp
 ```
 
 ### How to run
