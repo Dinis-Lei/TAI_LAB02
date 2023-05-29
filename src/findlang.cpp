@@ -34,12 +34,21 @@ static void parse_command_line(int argc, char** argv);
 
 static float calc_acc_information(const string preProcessFilename);
 
+static string createScript(const string r);
+
 map <string, float> global_acc_info;
 string r_Dir = "examples/language/";
 string preprocessFolder = "examples/preprocess/";
 
-bool save = false;
 string t_path;
+
+bool is_preprocessed = false;
+float alpha = 1;
+float threshold = 0.5;
+float max_size = INFINITY; 
+int min_size = 0;
+int n_anchors = 1;
+long unsigned int k = 4;
 
 int main(int argc, char** argv) {
 
@@ -47,14 +56,13 @@ int main(int argc, char** argv) {
 
 
 
-    cout << "t_path " << t_path << endl;
-    cout << "r_Dir " << r_Dir << endl;
+    // cout << "t_path " << t_path << endl;
+    // cout << "r_Dir " << r_Dir << endl;
     for (auto &p : fs::recursive_directory_iterator(r_Dir))
     {
         string r =  p.path().stem().string();
-        std::cout << r << '\n';
-        string target_name = t_path.substr( t_path.size()-7, 7);
-        cout << "Target name " << target_name << endl;
+        // std::cout << r << '\n';
+        string target_name = t_path.substr( 9, t_path.size()-13);
         string preprocessFileLocation = preprocessFolder + target_name+"/";
         // check if folder preprocessFileLocation exists
         if (!fs::exists(preprocessFileLocation)){
@@ -69,17 +77,15 @@ int main(int argc, char** argv) {
         }
 
         string preProcessFileName = preprocessFileLocation+"ipb_" + r + "_" + target_name +".txt" ;
-        cout << "preProcessFileName " << preProcessFileName ;
-        ifstream f(preProcessFileName);
-        if (!f.good()){
-            cout << " is not preprocessed"  << endl;
-            string script = "./bin/lang -n 16 -r " + preProcessFileName + " " + r_Dir + r + ".utf8 "+ t_path;
-            cout << "Script: " << script << endl;
+        // cout << "preProcessFileName " << preProcessFileName ;
+        if (!is_preprocessed){
+            // cout << " is not preprocessed" << endl;
+            string script = createScript(r);
+            // cout << "script :" << script ;
             const char* c = script.c_str();
             system( c );
         }
-        f.close();
-        cout << endl;
+        // cout << endl;
         global_acc_info.insert(std::make_pair(r,calc_acc_information(preProcessFileName )));
     }
     map<string, float>::iterator it;
@@ -134,7 +140,7 @@ static float calc_acc_information(const string preProcessFilename) {
             cout << "Invalid n argument" << std::endl;
             exit(EXIT_FAILURE);
         }
-        cout << "asize " << asize << endl;
+        // cout << "asize " << asize << endl;
         double maxInfo = log2(asize)/2;
 
         while (getline(input_file,line)) {
@@ -153,20 +159,81 @@ static float calc_acc_information(const string preProcessFilename) {
             acc_information += acc;
         }
     }
-    else{
-        cout << "Empty file" << endl;
-    }
-    cout << "acc_information total: " << acc_information << endl;
-    cout << "Accuracy: " << hits/total << endl;
+    // cout << "acc_information total: " << acc_information << endl;
+    // cout << "Accuracy: " << hits/total << endl;
     return hits/total; //acc_information;
 }
+
+
+static string createScript(const string r){
+    string base = "./bin/lang";
+    if (max_size == INFINITY)
+        return  "./bin/lang -k "+std::to_string(k) +"  -t "+std::to_string(threshold)+" -m "+std::to_string(min_size) + " -a "+ std::to_string(alpha) +" -n " + std::to_string(n_anchors) +" -s " + r_Dir + r + ".utf8 "+ t_path;
+    else
+        return  "./bin/lang -k "+std::to_string(k) +"  -t "+std::to_string(threshold)+" -m "+std::to_string(min_size) + " -M "+ std::to_string(max_size) + " -a "+ std::to_string(alpha) +" -n " + std::to_string(n_anchors) +" -s " + r_Dir + r + ".utf8 "+ t_path;
+}
+
 static void parse_command_line(int argc, char** argv) {
     int c;                          // Opt process
-    while ((c = getopt(argc, argv, "s")) != -1) {
+    while ((c = getopt(argc, argv, "k:t:a:m:M:n:ip")) != -1) {
         switch (c)
         {
-            case 's':
-                save = true;
+            case 'p':
+                is_preprocessed = true;
+                break;
+            case 'n':
+                try {
+                    n_anchors = stoi(optarg);
+                }
+                catch (exception &err) {
+                    cout << "Invalid n argument" << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+                break;
+            case 'M':
+                try {
+                    max_size = stoi(optarg);
+                }
+                catch (exception &err) {
+                    cout << "Invalid m argument" << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+                break;
+            case 'm':
+                try {
+                    min_size = stoi(optarg);
+                }
+                catch (exception &err) {
+                    cout << "Invalid m argument" << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+                break;
+            case 'a':
+                try {
+                    alpha = stof(optarg);
+                }
+                catch (exception &err) {
+                    cout << "Invalid a argument" << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+                break;
+            case 't':
+                try {
+                    threshold = stof(optarg);
+                }
+                catch (exception &err) {
+                    cout << "Invalid t argument" << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+                break;
+            case 'k':
+                try {
+                    k = stoi(optarg);
+                }
+                catch (exception &err) {
+                    cout << "Invalid K argument" << std::endl;
+                    exit(EXIT_FAILURE);
+                }
                 break;
             case '?':
                 cout << "Got unknown option." << std::endl; 
@@ -177,7 +244,13 @@ static void parse_command_line(int argc, char** argv) {
         }
     }
 
-    cout << "Save = " << save << std::endl;
+    // cout << "Nº of Anchors = " << n_anchors << endl;
+    // cout << "Max Size = " << max_size << endl;
+    // cout << "Min Size = " << min_size << endl;
+    // cout << "Alpha = " << alpha << endl;
+    // cout << "Threshold = " << threshold << endl;
+    // cout << "K = " << k << endl;
+    // cout << "Is preprocessed = " << is_preprocessed << endl;
 
 
     t_path = argv[optind];
