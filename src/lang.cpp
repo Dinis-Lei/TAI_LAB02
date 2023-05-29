@@ -39,7 +39,7 @@ static void load_reference(string fname);
  * @brief Loads the reference training text already processed
  * @param fname 
  */
-static void load_reference_preprocessed(string reference_fname, string copy_model_fname, string context_model_fname);
+static void load_reference_preprocessed(string reference_fname, string model_fname);
 
 /**
  * @brief Encodes the target text
@@ -75,8 +75,7 @@ long unsigned int k = 4;
 string reference_fname;
 string target_fname;
 string ipb_fname;
-string copy_model_fname;
-string context_model_fname;
+string model_fname;
 vector<char> reference_string;
 
 map<string, vector<int>> positions;
@@ -85,7 +84,7 @@ map<string, map<string, int>> context_table;
 int count_copies = 0, count_not_copies = 0, global_hits = 0, global_misses = 0, tot_anchors = 0;
 int default_symb_size;
 
-unordered_set<char> alphabet;
+set<char> alphabet;
 int asize;
 
 string context_window;
@@ -96,16 +95,18 @@ int context_hits = 0;
 int main(int argc, char** argv) {
 
     parse_command_line(argc, argv);
-    auto tic = chrono::high_resolution_clock::now();
     if (is_preprocessed)
-        load_reference_preprocessed(reference_fname, copy_model_fname, context_model_fname);
-    else
+        load_reference_preprocessed(reference_fname, model_fname);
+    else{
         load_reference(reference_fname);
+        generate_context_model(reference_fname, context_window_size);
+    }
+        
 
     if (save)
-        save_model(context_model_fname);
+        save_model(model_fname);
 
-    generate_context_model(reference_fname, context_window_size);
+    cout << "end load" << endl;
 
     // iterate over the positions map and calculate the average length of the vectors
     int all_sum = 0;
@@ -131,6 +132,7 @@ int main(int argc, char** argv) {
     ofs << asize << endl;
     ofs.close();
 
+    auto tic = chrono::high_resolution_clock::now();
     double fsize = 0;
     double csize = 0;
     encode_target(target_fname, ipb_fname, fsize, csize);
@@ -166,6 +168,8 @@ static void load_reference(string fname) {
     char c;
     int index = 0;
     while (infile.get(c)) {
+        if (c == '\n')
+            c = ' ';
         c = tolower(c);
         alphabet.insert(c); 
 
@@ -184,7 +188,7 @@ static void load_reference(string fname) {
 
 }
 
-static void load_reference_preprocessed(string fname, string copy_model_fname, string context_model_fname) {
+static void load_reference_preprocessed(string fname, string model_fname) {
     ifstream infile(fname);
     if (!infile.is_open()) {
         cerr << "Failed to open input file: " << fname << endl;
@@ -193,14 +197,17 @@ static void load_reference_preprocessed(string fname, string copy_model_fname, s
     // read file into reference_string
     char c;
     while (infile.get(c)) {
+        if (c == '\n')
+            c = ' ';
+        c = tolower(c);
         reference_string.push_back(c);
     }
     infile.close();
 
     // load copy model
-    ifstream infile2(copy_model_fname);
+    ifstream infile2("models/copy/" + model_fname);
     if (!infile2.is_open()) {
-        cerr << "Failed to open input file: " << copy_model_fname << endl;
+        cerr << "Failed to open input file: models/copy/" << model_fname << endl;
         exit(EXIT_FAILURE);
     }
     string line;
@@ -210,44 +217,74 @@ static void load_reference_preprocessed(string fname, string copy_model_fname, s
     asize = stoi(line);
     default_symb_size = ceil(log2(asize));
     while (getline(infile2, line)) {
-        stringstream ss(line);
         string sequence;
-        ss >> sequence;
+        // read the first k characters
+        sequence = line.substr(0, k);
+        stringstream ss(line.substr(k + 1, line.size() - k - 1));
+
+        if (sequence == "m. h") {
+            cout << "hit" << endl;
+            cout << line << endl;
+            cout << ss.str() << endl;
+        }
+            
         int index;
         while (ss >> index) {
+            if (sequence == "m. h") {
+                cout << index << " ";
+            }
             positions[sequence].push_back(index);
+        }
+        if (sequence == "m. h") {
+            cout << endl;
         }
     }
     infile2.close();
 
     // load context model
-    ifstream infile3(context_model_fname);
+    ifstream infile3("models/context/" + model_fname);
     if (!infile3.is_open()) {
-        cerr << "Failed to open input file: " << context_model_fname << endl;
+        cerr << "Failed to open input file: models/context/" << model_fname << endl;
         exit(EXIT_FAILURE);
     }
     getline(infile3, line);
     context_window_size = stoi(line);
+
     while (getline(infile3, line)) {
-        stringstream ss(line);
-        string sequence;
-        ss >> sequence;
-        char c;
-        int sum = 0;
-        while (ss >> c) {
-            int freq;
-            sum += freq;
-            ss >> freq;
-            context_table[sequence][string(1,c)] = freq;
+        if (line.empty()) {
+            continue;  // Skip blank lines
         }
-        context_table[sequence]["sum"] = sum;
+
+        string outerKey = line;
+        map<string, int> innerMap;
+        while (getline(infile3, line) && !line.empty()) {
+            istringstream iss(line);
+            string innerKeyStr;
+            int value;
+
+            if (iss >> innerKeyStr >> value) {
+                // Handle special characters
+                if (innerKeyStr == "[SPACE]") {
+                    innerKeyStr = " ";
+                }
+                innerMap[innerKeyStr] = value;
+            }
+        }
+        context_table[outerKey] = innerMap;
+        
     }
     infile3.close();
+
 }
 
 static void save_model(string fname) {
+    cout << "Saving model..." << endl;
     ofstream ofs;
     ofs.open("models/copy/" + fname, std::ofstream::out | std::ofstream::trunc);
+    if (!ofs.is_open()) {
+        cerr << "Failed to open output file: " << fname << endl;
+        exit(EXIT_FAILURE);
+    }
     ofs << k << endl;
     ofs << asize << endl;
     for (auto pair : positions) {
@@ -260,13 +297,25 @@ static void save_model(string fname) {
     ofs.close();
 
     ofs.open("models/context/" + fname, std::ofstream::out | std::ofstream::trunc);
+    if (!ofs.is_open()) {
+        cerr << "Failed to open output file: " << fname << endl;
+        exit(EXIT_FAILURE);
+    }
     ofs << context_window_size << endl;
-    for (auto pair : context_table) {
-        ofs << pair.first << " ";
-        for (auto pair2 : pair.second) {
-            ofs << "(" << pair2.first << " " << pair2.second << ") ";
+    for (const auto& outerPair : context_table) {
+        ofs << outerPair.first << endl;
+
+        for (const auto& innerPair : outerPair.second) {
+            // Handle special characters
+            if (innerPair.first == " ") {
+                ofs << "[SPACE]";
+            } else {
+                ofs << innerPair.first;
+            }
+            ofs << " " << innerPair.second << endl;
         }
-        ofs << endl;
+
+        ofs << endl;  // Add a blank line to separate outer pairs
     }
     ofs.close();
 }
@@ -283,6 +332,8 @@ static void generate_context_model(string fname, long unsigned int k) {
     char c;
     int index = 0;
     while (infile.get(c)) {
+        if (c == '\n')
+            c = ' ';
         c = tolower(c);
         if (sequence.size() == k) {
             //append to the vector of the [sequence] the index of the next char
@@ -316,6 +367,11 @@ static void encode_target(string target_fname, string ipb_fname, double& fsize, 
         cerr << "Failed to open input file: " << target_fname << endl;
         exit(EXIT_FAILURE);
     }
+    // cout << "Encoding target..." << endl;
+
+    // cout << context_table.size() << endl;
+    // cout << positions.size() << endl;
+    // cout << n_anchors << endl;
 
     string window = "";
     string testing_seq = "";
@@ -342,6 +398,7 @@ static void encode_target(string target_fname, string ipb_fname, double& fsize, 
             if (context_table.count(context_window) > 0 && context_table[context_window].count(string(1,symbol)) > 0) {
                 double prob = (double)context_table[context_window][string(1,symbol)]/(double)context_table[context_window]["sum"];
                 //cout << symbol << " " << prob << " " <<  context_table[context_window][string(1,symbol)] << " " << context_table[context_window]["sum"] <<  endl;
+                //cout << prob << endl;
                 info = -log2(prob);
                 context_hits++;
             }
@@ -399,7 +456,7 @@ static void encode_target(string target_fname, string ipb_fname, double& fsize, 
             window.erase(0, 1);
         }
     }
-
+    //ofs.close();
     if (testing_seq.length() > 0) {
         int active_count = 0;
         for (Anchor& anchor: anchors) {
@@ -439,6 +496,7 @@ static bool update_anchors(char symbol, int offset, bool& ignored_last, vector<A
         else {
             double prob;
             // cout << context_window << " " << context_table.count(context_window) << endl;
+            //if (false) {
             if (context_table.count(context_window) > 0 && context_table[context_window].count(string(1,symbol)) > 0) {
                 prob = (double)context_table[context_window][string(1,symbol)]/(double)context_table[context_window]["sum"];
                 //cout << symbol << " " << prob << " " <<  context_table[context_window][string(1,symbol)] << " " << context_table[context_window]["sum"] <<  endl;
@@ -573,20 +631,19 @@ static void write_array_to_file(vector<double>& array, string fname) {
 
 
 static void parse_command_line(int argc, char** argv) {
+    bool has_r = false;
     int c;                          // Opt process
     while ((c = getopt(argc, argv, "k:s:t:a:m:M:n:ir:p:")) != -1) {
         switch (c)
         {
             case 'r':
+                has_r = true;
                 ipb_fname = optarg;
-                ipb_fname = "ipb/" + ipb_fname;
+                cout << "IPB: " << ipb_fname << endl;
                 break;
             case 'p':
                 is_preprocessed = true;
-                context_model_fname = optarg;
-                copy_model_fname = optarg;
-                context_model_fname = "models/context/" + context_model_fname;
-                copy_model_fname = "models/copy/" + copy_model_fname;
+                model_fname = optarg;
                 break;
             case 'i':
                 ignore1 = true;
@@ -638,10 +695,7 @@ static void parse_command_line(int argc, char** argv) {
                 break;
             case 's':
                 save = true;
-                context_model_fname = optarg;
-                copy_model_fname = optarg;
-                context_model_fname = "models/context/" + context_model_fname;
-                copy_model_fname = "models/copy/" + copy_model_fname;
+                model_fname = optarg;
                 break;
             case 'k':
                 try {
@@ -669,6 +723,7 @@ static void parse_command_line(int argc, char** argv) {
     cout << "Save = " << save << endl;
     cout << "Ignore Last = " << ignore1 << endl;
     cout << "K = " << k << endl;
+    cout << "r = " << has_r << endl;
 
     if (argc - optind < 2) {
         cout << "Insert reference and target files" << endl;
@@ -677,4 +732,7 @@ static void parse_command_line(int argc, char** argv) {
 
     reference_fname = argv[optind];
     target_fname = argv[optind+1];
+
+    cout << "Reference file = " << reference_fname << endl;
+    cout << "Target file = " << target_fname << endl;
 }
