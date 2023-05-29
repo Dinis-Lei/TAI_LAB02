@@ -1,0 +1,120 @@
+ipb_fname: examples/preprocess/latin_sample/ipb_japanese_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_portugues_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_greek_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_russian_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_scottish_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_korean_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_latin_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_english_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_arab_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_spanish_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_cantonese_latin_sample.txt
+arab:0.00877835
+cantonese:0.0724214
+english:0.516459
+greek:0.144111
+japanese:0.0658376
+korean:0.0892465
+latin:0.697147
+portugues:0.518654
+russian:0.184345
+scottish:0.480614
+spanish:0.498171
+The most provable languages are : 
+      latin with a probability of 0.697147
+ipb_fname: examples/preprocess/latin_sample/ipb_japanese_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_portugues_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_greek_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_russian_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_scottish_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_korean_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_latin_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_english_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_arab_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_spanish_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_cantonese_latin_sample.txt
+arab:0.00146306
+cantonese:0.0256035
+english:0.437454
+greek:0.0314557
+japanese:0.0204828
+korean:0.0270666
+latin:0.667886
+portugues:0.422824
+russian:0.0607169
+scottish:0.402341
+spanish:0.389905
+The most provable languages are : 
+      latin with a probability of 0.667886
+ipb_fname: examples/preprocess/latin_sample/ipb_japanese_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_portugues_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_greek_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_russian_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_scottish_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_korean_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_latin_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_english_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_arab_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_spanish_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_cantonese_latin_sample.txt
+arab:0.00146306
+cantonese:0.0256035
+english:0.425018
+greek:0.0314557
+japanese:0.0204828
+korean:0.0270666
+latin:0.632773
+portugues:0.413314
+russian:0.0592538
+scottish:0.390636
+spanish:0.378932
+The most provable languages are : 
+      latin with a probability of 0.632773
+ipb_fname: examples/preprocess/latin_sample/ipb_japanese_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_portugues_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_greek_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_russian_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_scottish_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_korean_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_latin_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_english_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_arab_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_spanish_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_cantonese_latin_sample.txt
+arab:0.00146306
+cantonese:0.0256035
+english:0.425018
+greek:0.0314557
+japanese:0.0204828
+korean:0.0270666
+latin:0.625457
+portugues:0.413314
+russian:0.0592538
+scottish:0.38771
+spanish:0.378932
+The most provable languages are : 
+      latin with a probability of 0.625457
+ipb_fname: examples/preprocess/latin_sample/ipb_japanese_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_portugues_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_greek_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_russian_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_scottish_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_korean_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_latin_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_english_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_arab_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_spanish_latin_sample.txt
+ipb_fname: examples/preprocess/latin_sample/ipb_cantonese_latin_sample.txt
+arab:0.00146306
+cantonese:0.0256035
+english:0.425018
+greek:0.0314557
+japanese:0.0204828
+korean:0.0270666
+latin:0.625457
+portugues:0.413314
+russian:0.0592538
+scottish:0.386979
+spanish:0.378932
+The most provable languages are : 
+      latin with a probability of 0.625457

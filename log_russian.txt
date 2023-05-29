@@ -1,0 +1,120 @@
+ipb_fname: examples/preprocess/russian_sample/ipb_japanese_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_portugues_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_greek_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_russian_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_scottish_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_korean_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_latin_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_english_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_arab_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_spanish_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_cantonese_russian_sample.txt
+arab:0.0957672
+cantonese:0.181481
+english:0.0010582
+greek:0.161376
+japanese:0.0047619
+korean:0.140741
+latin:0.0031746
+portugues:0.0010582
+russian:0.795238
+scottish:0.232275
+spanish:0.0010582
+The most provable languages are : 
+      russian with a probability of 0.795238
+ipb_fname: examples/preprocess/russian_sample/ipb_japanese_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_portugues_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_greek_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_russian_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_scottish_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_korean_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_latin_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_english_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_arab_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_spanish_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_cantonese_russian_sample.txt
+arab:0.089418
+cantonese:0.17037
+english:0.0010582
+greek:0.148148
+japanese:0.0015873
+korean:0.134921
+latin:0.0031746
+portugues:0.0010582
+russian:0.795238
+scottish:0.206349
+spanish:0.0010582
+The most provable languages are : 
+      russian with a probability of 0.795238
+ipb_fname: examples/preprocess/russian_sample/ipb_japanese_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_portugues_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_greek_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_russian_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_scottish_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_korean_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_latin_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_english_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_arab_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_spanish_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_cantonese_russian_sample.txt
+arab:0.0851852
+cantonese:0.171958
+english:0.0010582
+greek:0.144444
+japanese:0.0010582
+korean:0.134921
+latin:0.0031746
+portugues:0.0010582
+russian:0.79418
+scottish:0.203175
+spanish:0.0010582
+The most provable languages are : 
+      russian with a probability of 0.79418
+ipb_fname: examples/preprocess/russian_sample/ipb_japanese_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_portugues_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_greek_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_russian_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_scottish_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_korean_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_latin_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_english_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_arab_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_spanish_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_cantonese_russian_sample.txt
+arab:0.084127
+cantonese:0.17037
+english:0.0010582
+greek:0.143915
+japanese:0.0010582
+korean:0.134392
+latin:0.0031746
+portugues:0.0010582
+russian:0.793651
+scottish:0.202116
+spanish:0.0010582
+The most provable languages are : 
+      russian with a probability of 0.793651
+ipb_fname: examples/preprocess/russian_sample/ipb_japanese_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_portugues_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_greek_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_russian_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_scottish_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_korean_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_latin_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_english_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_arab_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_spanish_russian_sample.txt
+ipb_fname: examples/preprocess/russian_sample/ipb_cantonese_russian_sample.txt
+arab:0.084127
+cantonese:0.17037
+english:0.0010582
+greek:0.143915
+japanese:0.0010582
+korean:0.134392
+latin:0.0031746
+portugues:0.0010582
+russian:0.793651
+scottish:0.202116
+spanish:0.0010582
+The most provable languages are : 
+      russian with a probability of 0.793651
